@@ -1,0 +1,140 @@
+# Socket Directory
+# vbell off
+# password 
+# use 256-color palette
+#term screen-256color
+#term xterm-256color  #bash
+term xterm  #zsh
+autodetach on
+# don't display lengthy license and version information on startup
+startup_message off
+# use big scrollback buffer
+defscrollback 15000
+# flow off
+# disable flow control as it conflicts with Ctrl-S prefix
+defflow off
+# defined backtick on hardstatus [%`] -> sessionname
+backtick 0 30 30 sh -c 'screen -ls | grep --color=no -o "$PPID[^[:space:]]*"'
+hardstatus on   
+hardstatus alwayslastline   
+# disable mouse function for scrollwheel
+termcapinfo xterm*|vt*|screen* ti@:te@
+# termcapinfo xterm*|vt* ti@:te@
+# Preventing resize the terminal window.
+termcapinfo xterm* 'is=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;4;6l'
+# hardstatus string "%{= KW} %H [%`] %{= Kw} | %{= kG}%-w%{.rW}%n %t%{-}%+w %=%{..G} %H[%`] %{..Y} %Y-%m-%d(%D) %c  "  
+# hardstatus string "%{= kG}%-w%{.rW}%n %t%{-}%+w %=%{..G} %H[%`] %{..Y} %Y-%m-%d(%D) %c  "  
+hardstatus string "%{= KW}[ %{y}Load: %l %{g}] %{= Kw} | %{= kG}%-w%{.rW}%n %t%{-}%+w %=%{..G} %H[%`] %{..Y} %Y-%m-%d(%D) %c  "  
+# 20170816 added "Pressed escape key in caption"
+caption always '%?%E%{+s}%?%n %t' # activates window caption  
+# caption always # activates window caption  
+# caption string '%{= wk}[ %{k}%H %{k}][%= %{= wk}%?%-Lw%?%{r}(%{r}%n*%f%t%?(%u)%?%{r})%{k}%?%+Lw%?%?%= %{k}][%{b} %Y/%d/%m %{k}%c %{k}]'
+# caption always '%{= mK}%-Lw%{= KW}%50>%n%f* %t%{= mK}%+Lw%<'
+# bindkey -k k5 prev # F5 for previous window   
+# bindkey -k k6 next # F6 for next window  
+# hardstatus string '%{= kG}[ %{G}%H %{g}][%= %{= kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B} %d/%m %{W}%c %{g}]'
+# screen -t tcsh0 0
+# screen -t tcsh1 1
+#
+# deflog on
+logfile $HOME/.screen/screenlog.%n
+# enable alternative screen
+altscreen on
+shelltitle $HOST
+# start with visual bell as default
+vbell on
+vbell_msg "bell on %t (%n)"
+
+# 20170816(https://xaizek.github.io/2015-11-08/switching-from-tmux-to-gnu-screen/)
+# don't log new windows to utmp (who and such won't work, which is fine)
+deflogin off
+# ignore case on searches in copy-mode
+ignorecase on
+# assume UTF-8 encoding
+defutf8 on
+# erase background with current bg color
+defbce on
+# remove delay after pressing escape key inside screen
+maptimeout 0
+# suppress trailing blank lines when scrolling up text into the history buffer
+compacthist on
+# set color of borders and command-line (cyan background, black foreground)
+rendition so = ck
+
+#Bindings
+# change prefix key to Ctrl-S -> instead Ctrl-c
+# escape "^S^S"
+select 0
+# bind c screen 1 # window numbering starts at 1 not 0
+# bind 0 select 10
+
+# vim-like navigation between windows
+# bind h focus left
+# bind j focus down
+# bind k focus up
+# bind l focus right
+
+# reload configuration file (note that this creates extra layout due to
+# `layout new initial` command)
+# bind r source ~/.screenrc
+
+# create new window with a shell prompt
+# bind C screen
+
+# split horizontally creating new shell prompt
+bind - eval split 'focus down' screen
+
+# split vertically creating new shell prompt
+bind | eval 'split -v' 'focus right' screen
+
+# create new layout with a shell prompt
+# bind c eval 'layout new' screen
+
+# 
+bind ^[[D focus left
+bind ^[[C focus right
+bind ^[[A focus up
+bind ^[[B focus down
+
+# # put screen into resize mode
+# bind R command -c rsz
+
+# # use hjkl keys to resize regions
+# bind -c rsz h eval "resize -h -5" "command -c rsz"
+# bind -c rsz j eval "resize -v -5" "command -c rsz"
+# bind -c rsz k eval "resize -v +5" "command -c rsz"
+# bind -c rsz l eval "resize -h +5" "command -c rsz"
+# 
+# # use HJKL keys to move between regions
+# bind -c rsz H eval "focus left"  "command -c rsz"
+# bind -c rsz J eval "focus down"  "command -c rsz"
+# bind -c rsz K eval "focus up"    "command -c rsz"
+# bind -c rsz L eval "focus right" "command -c rsz"
+
+# switch windows with F3 (prev) and F4 (next)
+# bindkey "R" prev
+# bindkey "S" next
+
+# switch layouts with Ctrl+F3 (prev layout) and Ctrl+F4 (next)
+# bindkey "1;5R" layout prev
+# bindkey "1;5S" layout next
+
+# F2 puts Screen into resize mode. Resize regions using hjkl keys.
+# bindkey "Q" eval "command -c rsz" # enter resize mode
+bind r command -c rsz
+
+# use hjkl keys to resize regions
+bind -c rsz h eval "resize -h -5" "command -c rsz"
+bind -c rsz j eval "resize -v -5" "command -c rsz"
+bind -c rsz k eval "resize -v +5" "command -c rsz"
+bind -c rsz l eval "resize -h +5" "command -c rsz"
+
+# quickly switch between regions using tab and arrows
+bind -c rsz \t    eval "focus"       "command -c rsz" # Tab
+bind -c rsz -k kl eval "focus left"  "command -c rsz" # Left
+bind -c rsz -k kr eval "focus right" "command -c rsz" # Right
+bind -c rsz -k ku eval "focus up"    "command -c rsz" # Up
+bind -c rsz -k kd eval "focus down" "command -c rsz" # Down
+
+# screen session
+bind n eval "screen sh -c 'sleep 0.01; screen-display-regions'" "other"
